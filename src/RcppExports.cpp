@@ -121,6 +121,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Qenet
+Rcpp::List Qenet(arma::vec y, arma::mat x, arma::mat c, double theta, int maxSteps);
+RcppExport SEXP _Bayenet_Qenet(SEXP ySEXP, SEXP xSEXP, SEXP cSEXP, SEXP thetaSEXP, SEXP maxStepsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< int >::type maxSteps(maxStepsSEXP);
+    rcpp_result_gen = Rcpp::wrap(Qenet(y, x, c, theta, maxSteps));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Qenetss
+Rcpp::List Qenetss(arma::vec y, arma::mat x, arma::mat c, double theta, int maxSteps);
+RcppExport SEXP _Bayenet_Qenetss(SEXP ySEXP, SEXP xSEXP, SEXP cSEXP, SEXP thetaSEXP, SEXP maxStepsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< int >::type maxSteps(maxStepsSEXP);
+    rcpp_result_gen = Rcpp::wrap(Qenetss(y, x, c, theta, maxSteps));
+    return rcpp_result_gen;
+END_RCPP
+}
 // enet
 Rcpp::List enet(arma::vec y, arma::mat x, arma::mat c, int maxSteps);
 RcppExport SEXP _Bayenet_enet(SEXP ySEXP, SEXP xSEXP, SEXP cSEXP, SEXP maxStepsSEXP) {
@@ -135,13 +165,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// enetss
+Rcpp::List enetss(arma::vec y, arma::mat x, arma::mat c, int maxSteps);
+RcppExport SEXP _Bayenet_enetss(SEXP ySEXP, SEXP xSEXP, SEXP cSEXP, SEXP maxStepsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type c(cSEXP);
+    Rcpp::traits::input_parameter< int >::type maxSteps(maxStepsSEXP);
+    rcpp_result_gen = Rcpp::wrap(enetss(y, x, c, maxSteps));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_Bayenet_BL", (DL_FUNC) &_Bayenet_BL, 15},
     {"_Bayenet_BLSS", (DL_FUNC) &_Bayenet_BLSS, 19},
     {"_Bayenet_QBL", (DL_FUNC) &_Bayenet_QBL, 16},
     {"_Bayenet_QBLSS", (DL_FUNC) &_Bayenet_QBLSS, 20},
+    {"_Bayenet_Qenet", (DL_FUNC) &_Bayenet_Qenet, 5},
+    {"_Bayenet_Qenetss", (DL_FUNC) &_Bayenet_Qenetss, 5},
     {"_Bayenet_enet", (DL_FUNC) &_Bayenet_enet, 4},
+    {"_Bayenet_enetss", (DL_FUNC) &_Bayenet_enetss, 4},
     {NULL, NULL, 0}
 };
 

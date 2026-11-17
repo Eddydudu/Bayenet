@@ -122,3 +122,39 @@ arma::vec mvrnormCpp(const arma::vec& mu, const arma::mat& sigma){
 	return rs;
 }
 
+
+
+// ---- helpers for the elastic-net samplers (enet, enetss, Qenet, Qenetss) ----
+
+// One draw from the inverse Gaussian distribution, using the same algorithm as
+// VGAM::rinv.gaussian(n = 1, mu, lambda), which the former R code called.
+// NOTE: when phi = lambda/mu is tiny (below about 1e-8), the subtraction sqrt(Z^2 + 4 phi Z) - Z
+// cancels and y1 is dominated by rounding error, in VGAM as well as here. This happens in enet and
+// enetss when eta1 becomes very small. To give exactly the same numbers as the R code in that case,
+// every product below is stored in a volatile variable, so it is rounded on its own, as in R. Without
+// this, compilers may fuse "a*b + c" into one operation (FMA), which rounds differently.
+double rinvgauss_vgam(double mu, double lambda)
+{
+	double u = R::runif(0.0, 1.0);
+	double z = R::rnorm(0.0, 1.0);
+	volatile double Z = z * z;
+	volatile double phi = lambda / mu;
+	volatile double ZZ = Z * Z;
+	volatile double fourPhi = 4.0 * phi;
+	volatile double fourPhiZ = fourPhi * Z;
+	double y1 = 1.0 - 0.5 * (std::sqrt(ZZ + fourPhiZ) - Z) / phi;
+	return ((1.0 + y1) * u > 1.0) ? mu / y1 : mu * y1;
+}
+
+// One draw from Gamma(shape, scale) truncated to (a, Inf).
+// Same inverse-CDF method as hbmem::rtgamma(1, shape, scale, a, b = Inf), which the former
+// R code called, but on the log upper-tail scale. hbmem computes 1 - P(X <= a), which rounds
+// to 0 when P(X > a) is tiny (e.g. shape 1/2, scale 1/35, a = 1), so every draw becomes Inf
+// and the R "redraw until valid" loop never ends. This version stays accurate there and gives
+// the same draws as hbmem (up to rounding) in the normal range.
+double rtgamma_lower(double shape, double scale, double a)
+{
+	double logS = R::pgamma(a, shape, scale, 0, 1);   // log P(X > a)
+	double U = R::runif(0.0, 1.0);
+	return R::qgamma(logS + std::log1p(-U), shape, scale, 0, 1);
+}

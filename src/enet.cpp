@@ -9,19 +9,7 @@ using namespace arma;
 // C++ version of the former R/enet.R: Gibbs sampler for the Bayesian elastic net
 // (non-robust, non-sparse). Same model, priors, starting values and update order
 // as the R code. "R line" comments refer to the original R/enet.R (Bayenet 0.4).
-
-
-// One draw from the inverse Gaussian distribution, using the same algorithm as
-// VGAM::rinv.gaussian(n = 1, mu, lambda), which the R code called.
-static double rinvgauss_vgam(double mu, double lambda)
-{
-  double u = R::runif(0.0, 1.0);
-  double z = R::rnorm(0.0, 1.0);
-  double Z = z * z;
-  double phi = lambda / mu;
-  double y1 = 1.0 - 0.5 * (std::sqrt(Z * Z + 4.0 * phi * Z) - Z) / phi;
-  return ((1.0 + y1) * u > 1.0) ? mu / y1 : mu * y1;
-}
+// rinvgauss_vgam() (same algorithm as VGAM::rinv.gaussian) is in BVCUtilities.cpp.
 
 
 // [[Rcpp::export()]]
@@ -64,7 +52,7 @@ Rcpp::List enet(arma::vec y, arma::mat x, arma::mat c, int maxSteps)
     // ---- sample Tau (R lines 56-68) ----
     double lambda_prime = eta1 / sigma2;
     for (int j = 0; j < p; j++) {
-      double nu_prime = std::sqrt(eta1 / (eta2 * beta(j) * beta(j)));
+      double nu_prime = std::sqrt(eta1 / (eta2 * (beta(j) * beta(j))));   // same order as R
       double temp;
       do {                                         // redraw until positive, as in R
         temp = rinvgauss_vgam(nu_prime, lambda_prime);
