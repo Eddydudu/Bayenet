@@ -1,0 +1,9 @@
+# build products (made when the package is compiled; never commit them)
+src/*.o
+src/*.so
+src/*.dll
+
+# RStudio / R session files
+.Rproj.user/
+.Rhistory
+.RData
