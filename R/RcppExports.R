@@ -17,3 +17,7 @@ QBLSS <- function(y, x, c, maxSteps, hatAlpha, hatBeta, hatTau, hatV, hatSg, ss2
     .Call(`_Bayenet_QBLSS`, y, x, c, maxSteps, hatAlpha, hatBeta, hatTau, hatV, hatSg, ss2, invSigAlpha0, hatPi, hatEtaSq, theta, r1, a, b, sh1, sh0, progress)
 }
 
+enet <- function(y, x, c, maxSteps) {
+    .Call(`_Bayenet_enet`, y, x, c, maxSteps)
+}
+
